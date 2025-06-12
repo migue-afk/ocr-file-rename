@@ -31,3 +31,21 @@ else
         fi
 fi
 
+if [[ ! -d "$DIRECTORY" ]]; then
+        echo "Error : The directory '$DIRECTORY' does not exist or is not a directory"
+        echo "Creating the directory ---> Try again"
+        mkdir archive
+        exit 1
+else
+        if [ -n "$(ls -A $DIRECTORY)" ];then
+                echo "Directory '$DIRECTORY' has content; possible overwrite"
+                exit 1
+        else
+                echo "🔂 → Starting OCR"
+                find "$DIRECTORYORG" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
+                echo "File Original $(md5sum $filereada)" >> hashfile.txt
+                namebase=$(basename $filereada .pdf)
+                ocrmypdf -l spa --force-ocr --output-type pdfa --optimize 3 --deskew --rotate-pages --jobs 4 --tesseract-timeout=300 $filereada $DIRECTORY/$namebase.pdf
+        done
+        fi
+fi
