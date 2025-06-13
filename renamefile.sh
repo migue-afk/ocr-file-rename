@@ -49,3 +49,31 @@ else
         done
         fi
 fi
+
+#Process substitution no subshell
+
+while IFS= read -r fileread; do
+        i=$((i+1))
+        printf -v newname "%04d.pdf" "$i"
+        destiny="$DIRECTORY/$newname"
+        if [[ -e "$destiny" ]]; then
+                echo "Error: destiny '$destiny' exist"
+                exit 1
+        fi
+
+        mv -- "$fileread" "$destiny"
+
+        echo "🟢 Rename: '$(basename "$fileread")' → '$(basename "$destiny")'"
+#done < <(find "$DIRECTORY" -maxdepth 1 -type f -name "*.pdf" -newer marcador.tmp | sort)
+done < <(find "$DIRECTORY" -maxdepth 1 -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} +)
+echo "Rename succefully. $(printf "%d" "$i")"
+
+find "$DIRECTORY" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
+echo "→ File rename "$DIRECTORY"/$(basename "$filereada") $(date)" >> hashesfile2.txt
+done
+
+paste hashesfile.txt hashesfile2.txt > hashes.txt
+
+
+
+
