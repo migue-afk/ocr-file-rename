@@ -15,6 +15,11 @@ function ctrl_c (){
 }
 trap ctrl_c INT
 
+#Cleaned .txt
+echo " " > /tmp/hashfile.txt
+echo " " > /tmp/hashfile2.txt
+echo " " > hashes.txt
+
 #------------------------------------------------------------------------------------------
 
 DIRECTORY="./archive"		#Destination directory
