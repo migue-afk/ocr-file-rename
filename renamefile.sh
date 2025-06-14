@@ -17,8 +17,8 @@ trap ctrl_c INT
 
 #------------------------------------------------------------------------------------------
 
-DIRECTORY="./archive"
-DIRECTORYORG="./original"
+DIRECTORY="./archive"		#Destination directory
+DIRECTORYORG="./original"	#Insert files for OCR processing and file renaming
 
 if [[ ! -d "$DIRECTORYORG" ]];then
         echo "[-] Error: The directory '$DIRECTORYORG' does not exist or is not a directory"
@@ -43,7 +43,7 @@ else
         else
                 echo "🔂 → Starting OCR"
                 find "$DIRECTORYORG" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
-                echo "File Original $(md5sum $filereada)" >> hashfile.txt
+                echo "File Original $(md5sum $filereada)" >> /tmp/hashfile.txt
                 namebase=$(basename $filereada .pdf)
                 ocrmypdf -l spa --force-ocr --output-type pdfa --optimize 3 --deskew --rotate-pages --jobs 4 --tesseract-timeout=300 $filereada $DIRECTORY/$namebase.pdf
         done
@@ -64,16 +64,16 @@ while IFS= read -r fileread; do
         mv -- "$fileread" "$destiny"
 
         echo "🟢 Rename: '$(basename "$fileread")' → '$(basename "$destiny")'"
-#done < <(find "$DIRECTORY" -maxdepth 1 -type f -name "*.pdf" -newer marcador.tmp | sort)
+
 done < <(find "$DIRECTORY" -maxdepth 1 -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} +)
+
 echo "Rename succefully. $(printf "%d" "$i")"
 
 find "$DIRECTORY" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
-echo "→ File rename "$DIRECTORY"/$(basename "$filereada") $(date)" >> hashesfile2.txt
+	echo "→ File rename "$DIRECTORY"/$(basename "$filereada") $(date)" >> /tmp/hashfile2.txt
 done
 
-paste hashesfile.txt hashesfile2.txt > hashes.txt
-
+paste /tmp/hashfile.txt /tmp/hashfile2.txt > hashes.txt
 
 
 
