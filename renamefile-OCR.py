@@ -34,7 +34,7 @@ def clean_ocr_text(text):
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
-def extarct_date(raw2)
+def extract_date(raw2)
 
     date_pattern = re.findall(  r'(\d{1,2}\s+de\s+\w+\s+\d{4}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2})',raw2,flags = re.IGNORECASE)
 
