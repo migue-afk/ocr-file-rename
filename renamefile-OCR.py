@@ -1,7 +1,6 @@
 import re
 import ftfy
 import unicodedata
-import ollama
 import os
 import dateparser
 from spellchecker import SpellChecker
@@ -9,7 +8,6 @@ from pathlib import Path
 from PyPDF2 import PdfReader
 from natsort import natsorted
 
-MODEL_NAME = 'llama3.2:3b'
 inputpdf = Path("archive")
 renamedest = Path("./archive")
 renamedest.mkdir(exist_ok=True)
