@@ -47,6 +47,18 @@ def extract_date(raw2)
         else:
             raw2 = 'datenotfound'
     return raw2
+
+def type_document(raw3)
+    # Insert all type document; for example: BILL
+    raw3 = raw3.upper()
+    if "BILL" in raw3:
+        return "BILL"
+    elif "TICKET" in raw3:
+        return "TICKET"
+    elif "CERTIFICATE" in raw3:
+        return "CERTIFICATE"
+    else:
+        return "notfound"
  
 if __name__ == '__main__':
 
@@ -56,4 +68,5 @@ if __name__ == '__main__':
             continue
     clean_text = clean_ocr_text(raw1) 
     date_text = extract_date(clean_text)
+    type_doc = type_document(clean_text)
 
