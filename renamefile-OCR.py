@@ -51,6 +51,13 @@ def extract_date(raw2):
             raw2 = 'datenotfound'
     return raw2
 
+def safe_filename(name):
+    name = name.replace(" ","_")
+    name = re.sub(r'[<>:"\\/|?*]','_',name)
+    name = re.sub(r'_+','_', name)
+    name = re.sub(r"(\d{2})_(\d{2})_(\d{2})", r"\1-\2-\3", name)
+    return name
+
 
 def type_document(raw3):
     # Insert all type document; for example: BILL
@@ -73,8 +80,10 @@ if __name__ == '__main__':
         clean_text = clean_ocr_text(raw1) 
         date_text = extract_date(clean_text)
         type_doc = type_document(clean_text)
+        renamed_file = safe_filename (f"{type_doc} {date_text}.pdf")
         #print (clean_text)
         print (date_text)
         print (type_doc)
+        print (renamed_file)
         print ('############################')
 
