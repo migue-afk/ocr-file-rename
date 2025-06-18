@@ -32,21 +32,28 @@ def clean_ocr_text(text):
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
-def extract_date(raw2)
-    date_pattern = re.findall(  r'(\d{1,2}\s+de\s+\w+\s+\d{4}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2})',raw2,flags = re.IGNORECASE)
+
+def extract_date(raw2):
+    # Buscar fechas en el texto
+    date_pattern = re.findall(
+        r'(\d{1,2}\s+de\s+\w+\s+\d{4}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2})',
+        raw2,
+        flags=re.IGNORECASE
+    )
     if not date_pattern:
         raw2 = 'datenotfound'
         return raw2
     for date_str in date_pattern:
         date_obj = dateparser.parse(date_str)
         if date_obj:
-            raw2 = date.obj.strftime('%d-%m-%Y') #date format ISO
-            break   # Show only the first result
+            raw2 = date_obj.strftime('%d-%m-%Y')
+            break
         else:
             raw2 = 'datenotfound'
     return raw2
 
-def type_document(raw3)
+
+def type_document(raw3):
     # Insert all type document; for example: BILL
     raw3 = raw3.upper()
     if "BILL" in raw3:
@@ -64,7 +71,11 @@ if __name__ == '__main__':
         raw1 = pdftotext(pdf_file)
         if not raw1:
             continue
-    clean_text = clean_ocr_text(raw1) 
-    date_text = extract_date(clean_text)
-    type_doc = type_document(clean_text)
+        clean_text = clean_ocr_text(raw1) 
+        date_text = extract_date(clean_text)
+        type_doc = type_document(clean_text)
+        #print (clean_text)
+        print (date_text)
+        print (type_doc)
+        print ('############################')
 
