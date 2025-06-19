@@ -86,4 +86,25 @@ if __name__ == '__main__':
         print (type_doc)
         print (renamed_file)
         print ('############################')
+        destination = renamedest / renamed_file
+        os.rename(pdf_file,destination)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -47,6 +47,14 @@ else
                 exit 1
         else
                 echo "🔂 → Starting OCR"
+		#Convert all files .jpg to .pdf
+		p=20
+		find "$orgDIRECTORY" -type f -name "*.jpg" -newer marcador.tmp | sort | while IFS= read -r filereadjpg; do
+    		img2pdf "$filereadjpg" -o "$orgDIRECTORY/${p}.pdf"
+		echo "conviitiendo $filereadjpg"
+    		p=$((p + 1))
+		done
+		# Init OCR and create hashes for all file
                 find "$DIRECTORYORG" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
                 echo "File Original $(md5sum $filereada)" >> /tmp/hashfile.txt
                 namebase=$(basename $filereada .pdf)
