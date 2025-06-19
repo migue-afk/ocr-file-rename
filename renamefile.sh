@@ -51,7 +51,7 @@ else
 		p=20
 		find "$orgDIRECTORY" -type f -name "*.jpg" -newer marcador.tmp | sort | while IFS= read -r filereadjpg; do
     		img2pdf "$filereadjpg" -o "$orgDIRECTORY/${p}.pdf"
-		echo "conviitiendo $filereadjpg"
+		#echo "convert $filereadjpg"
     		p=$((p + 1))
 		done
 		# Init OCR and create hashes for all file
