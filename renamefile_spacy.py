@@ -1,16 +1,19 @@
-import re
-import ftfy
-import unicodedata
-import os
 import dateparser
-from spellchecker import SpellChecker
+import ftfy
+import os
+import re
+import spacy
+import unicodedata
+from natsort import natsorted
 from pathlib import Path
 from PyPDF2 import PdfReader
-from natsort import natsorted
+from spellchecker import SpellChecker
+
 
 inputpdf = Path("archive")
 renamedest = Path("./archive")
 renamedest.mkdir(exist_ok=True)
+nlp = spacy.load("en_core_web_sm")
 
 def pdftotext(pdf_path):
     try:
@@ -74,6 +77,14 @@ def type_document(raw3):
         return "CERTIFICATE"
     else:
         return "notfound"
+
+def name_document(raw4):
+    name_text = raw4.lower().title()
+    entity = nlp(name_text)
+    for ent in entity.ents:
+        if ent.label_ == "PERSON":
+            return ent.text
+    return "nonamefound"
  
 if __name__ == '__main__':
 
@@ -84,8 +95,9 @@ if __name__ == '__main__':
         clean_text = clean_ocr_text(raw1) 
         date_text = extract_date(clean_text)
         type_doc = type_document(clean_text)
-        renamed_file = safe_filename (f"{type_doc} {date_text}.pdf")
-        #print (clean_text)
+        name_doc = name_document(clean_text)
+        renamed_file = safe_filename (f"{type_doc} {name_doc} {date_text}.pdf")
+        print (clean_text)
         print (date_text)
         print (type_doc)
         print (renamed_file)
