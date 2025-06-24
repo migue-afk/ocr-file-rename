@@ -26,7 +26,7 @@ def pdftotext(pdf_path):
         print(f"Error read {pdf_path.name}: {excep}")
     return ""
 
-def clean_ocr_text(text):
+def clean_ocr_text(text: str) -> str:
     text = ftfy.fix_text(text)
     text = re.sub(r'-\s*\n\s*', '', text)
     text = re.sub(r'\n+', ' ', text)
@@ -83,7 +83,8 @@ def name_document(raw4):
     entity = nlp(name_text)
     for ent in entity.ents:
         if ent.label_ == "PERSON":
-            return ent.text
+            ent_a = ' '.join(ent.text.split()[:2])
+            return ent_a
     return "nonamefound"
  
 if __name__ == '__main__':
@@ -100,8 +101,9 @@ if __name__ == '__main__':
         print (clean_text)
         print (date_text)
         print (type_doc)
-        print (renamed_file)
+        print (name_doc)
         print ('############################')
+        print (renamed_file)
         destination = renamedest / renamed_file
         os.rename(pdf_file,destination)
 
