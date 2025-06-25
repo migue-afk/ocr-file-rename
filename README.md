@@ -1,2 +1,4 @@
-### Step 1. Execute ./renamefile.sh
-### Step 2. Execute python renamefile-OCR.py
+### Step 1. Scan file OCR and order
+Place the scanned file in the ./original directory, run ./renamefile.sh to perform OCR recognition, and rename the file from examplescanpdf.pdf to 0001.pdf, 000x.pdf.
+### Step 2. Rename file
+Execute "python renamefile-OCR.py" for extract name, type, date for rename the file name_type_date.pdf.
