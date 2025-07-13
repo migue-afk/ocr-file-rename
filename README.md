@@ -1,4 +1,4 @@
-This repository can be used to rename documents en masse from GNU/Linux, and can also determine the hash values ​​of each file to ensure its integrity.
+This repository can be used to rename documents en masse, and can also determine the hash values ​​of each file to ensure its integrity.
 ### Step 1. Create Python Virtual Environment
 
 Create virtual environment, access and install requirements
