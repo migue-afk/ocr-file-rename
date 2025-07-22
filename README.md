@@ -1,4 +1,8 @@
-This repository can be used to perform OCR recognition and rename documents based on content, for example, name_date.pdf, and it also determines the hash values of each file to ensure its integrity.
+This repository can be used to perform OCR recognition and rename documents based on content, for example, name_date.pdf, and it also determines the hash values of each file to ensure its integrity. 
+This tool is intended for use on Linux systems only.
+
+
+
 ### Step 1. Create Python Virtual Environment
 
 Create virtual environment, access and install requirements
