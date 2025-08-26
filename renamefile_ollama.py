@@ -9,7 +9,7 @@ from PyPDF2 import PdfReader
 from natsort import natsorted
 import ollama
 
-MODEL_NAME = 'llama3.2:3b'
+MODEL_NAME = 'llama3.1:8b'
 inputpdf = Path("archive")
 renamedest = Path("./archive")
 renamedest.mkdir(exist_ok=True)
@@ -77,13 +77,18 @@ def type_document(raw3):
         return "notfound"
 
 def ollama_document(raw4):
-    if not raw4.strip()
+    if not raw4.strip():
         return "Error: empy text"
 
     try:
         prompt = f"""Task: Extract 1 first and last name from the TEXT
 
-Do not provide explanations. Return ONLY ONE LINE in capital letters with a first and last name, maximum 4 words. If there are no personal names, just write "Unknown." The possible name can be accompanied by these keywords: Customer, Name, User, Sender, or similar.
+You are given OCR text from a document. Extract the name and last name (ignore companies).
+OUTPUT RULES:
+- Return ONLY ONE LINE, IN UPPERCASE, with FIRST and LAST NAME (max 4 words).
+- If no personal name is present, return: UNKNOWN
+- No explanations. No extra characters.
+
 
 TEXT:
 {raw4}
@@ -94,7 +99,8 @@ TEXT:
                 )
         return response['message']['content']
     except Exception as e:
-        return f"Error in the model: {str(e)}"
+        #return f"Error in the model: {str(e)}"
+        return f"Error in the model"
 
 if __name__ == '__main__':
 
