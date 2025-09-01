@@ -18,7 +18,7 @@ trap ctrl_c INT
 #Cleaned .txt
 echo " " > /tmp/hashfile.txt
 echo " " > /tmp/hashfile2.txt
-echo " " > hashes.txt
+echo " " > original/hashes.txt
 
 #------------------------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ find "$DIRECTORY" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | 
 	echo "→ File rename "$DIRECTORY"/$(basename "$filereada") $(date)" >> /tmp/hashfile2.txt
 done
 
-paste /tmp/hashfile.txt /tmp/hashfile2.txt > hashes.txt
+paste /tmp/hashfile.txt /tmp/hashfile2.txt > original/hashes.txt
 
 
 

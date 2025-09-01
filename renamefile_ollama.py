@@ -76,6 +76,7 @@ def type_document(raw3):
     else:
         return "notfound"
 
+
 def ollama_document(raw4):
     if not raw4.strip():
         return "Error: empy text"
@@ -84,8 +85,7 @@ def ollama_document(raw4):
         prompt = f"""Task: Extract 1 first and last name from the TEXT
 
 You are given OCR text from a document. Extract the name and last name (ignore companies).
-OUTPUT RULES:
-- Return ONLY ONE LINE, IN UPPERCASE, with FIRST and LAST NAME (max 4 words).
+OUTPUT RULES:- Return ONLY ONE LINE, IN UPPERCASE, with FIRST and LAST NAME (max 4 words).
 - If no personal name is present, return: UNKNOWN
 - No explanations. No extra characters.
 
@@ -93,14 +93,19 @@ OUTPUT RULES:
 TEXT:
 {raw4}
 """
-        response = ollama.chat(
+
+        ollama_host = "http://localhost:11434" #Linux users host network
+        #ollama_host = "http://host.docker.internal:11434" #User Windows macOS
+
+        client = ollama.Client(host=ollama_host)
+        response = client.chat(
                 model = MODEL_NAME,
                 messages = [{'role': 'user', 'content': prompt}]
                 )
         return response['message']['content']
     except Exception as e:
         #return f"Error in the model: {str(e)}"
-        return f"Error in the model"
+        return "Error in the model"
 
 if __name__ == '__main__':
 
