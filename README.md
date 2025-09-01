@@ -22,3 +22,48 @@ Place the scanned file into ./original directory, run ./renamefile-OCR.sh to per
 
 ## Dockerfile
 
+In directory execute `docker build`
+
+```bash
+sudo docker build -t ocr_rename .
+```
+
+After the instalation `run` docker for to do reconig OCR and define identifier in directory `archive`
+
+
+After installation, `run` Docker to perform OCR recognition and set the identifier in the `archive` directory.
+
+```bash
+sudo docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile-OCR.sh
+```
+
+Now we can execute other scripts for rename
+
+```bash
+sudo docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile.py
+```
+
+```bash
+sudo docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile_spacy.py
+```
+
+```bash
+sudo docker run --rm --network=host -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile_ollama.py
+```
+
+For Docker Dessktop `network=host` does not work, use `ollama_host = "http://host.docker.internal:11434` in **renamefile_ollama.py**
+
+
+Not to forget install ollama and the model `llama3.1:8b` or other with client in your host or remote cliente, in this case define ip in the ollama_host
+
+**Run the container in the background with a shell**
+```bash
+sudo docker run -dit --name ocr_rename_con -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename /bin/bash
+```
+
+# Enter the container
+```bash
+docker exec -it ocr_rename_con /bin/bash
+```
+
+
