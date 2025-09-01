@@ -20,3 +20,5 @@ Place the scanned file into ./original directory, run ./renamefile-OCR.sh to per
 - Execute "python renamefile_spacy.py" for extract type, name and date for rename the file type_name_date.pdf.
 - Execute "python renamefile_ollama.py" for extarct type, name and date for rename the file type_name_date.pdf, using llama3.1:8b.
 
+## Dockerfile
+
