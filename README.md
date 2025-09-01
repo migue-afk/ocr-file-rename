@@ -28,9 +28,6 @@ In directory execute `docker build`
 sudo docker build -t ocr_rename .
 ```
 
-After the instalation `run` docker for to do reconig OCR and define identifier in directory `archive`
-
-
 After installation, `run` Docker to perform OCR recognition and set the identifier in the `archive` directory.
 
 ```bash
