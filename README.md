@@ -60,7 +60,7 @@ sudo docker run -dit --name ocr_rename_con -v "$(pwd)/original":/ocrapp/original
 
 **Enter the container**
 ```bash
-docker exec -it ocr_rename_con /bin/bash
+sudo docker exec -it ocr_rename_con /bin/bash
 ```
 
 
