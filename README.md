@@ -28,7 +28,7 @@ In directory execute `docker build`
 docker build -t ocr_rename .
 ```
 
-After installation, `run` Docker to perform OCR recognition and set the identifier in the `archive` directory.
+After installation, `run` Docker to perform OCR recognition and set the identifier in the `archive` directory. If the `archive` directory does not exist, create it.
 
 ```bash
 docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile-OCR.sh
