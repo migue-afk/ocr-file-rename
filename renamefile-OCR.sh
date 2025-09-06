@@ -49,8 +49,8 @@ else
                 echo "🔂 → Starting OCR"
 		#Convert all files .jpg to .pdf
 		p=20
-		find "$orgDIRECTORY" -type f -name "*.jpg" -newer marcador.tmp | sort | while IFS= read -r filereadjpg; do
-    		img2pdf "$filereadjpg" -o "$orgDIRECTORY/${p}.pdf"
+		find "$DIRECTORYORG" -type f -name "*.jpg" -newer marcador.tmp | sort | while IFS= read -r filereadjpg; do
+    		img2pdf "$filereadjpg" -o "$DIRECTORYORG/${p}.pdf"
 		#echo "convert $filereadjpg"
     		p=$((p + 1))
 		done
