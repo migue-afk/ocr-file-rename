@@ -18,12 +18,13 @@ trap ctrl_c INT
 #Cleaned .txt
 echo " " > /tmp/hashfile.txt
 echo " " > /tmp/hashfile2.txt
-echo " " > original/hashes.txt
+echo " " > unify/hashes.txt
 
 #------------------------------------------------------------------------------------------
 
-DIRECTORY="./archive"		#Destination directory
-DIRECTORYORG="./original"	#Insert files for OCR processing and file renaming
+DIRECTORY="./archive"   #Destination directory
+DIRECTORYORG="./unify"  #Insert files for OCR processing and file renaming
+DIRECTORYSKIP="./report/archivo/skip"
 
 if [[ ! -d "$DIRECTORYORG" ]];then
         echo "[-] Error: The directory '$DIRECTORYORG' does not exist or is not a directory"
@@ -47,24 +48,25 @@ else
                 exit 1
         else
                 echo "🔂 → Starting OCR"
-		#Convert all files .jpg to .pdf
-		p=20
-		find "$DIRECTORYORG" -type f -name "*.jpg" -newer marcador.tmp | sort | while IFS= read -r filereadjpg; do
-    		img2pdf "$filereadjpg" -o "$DIRECTORYORG/${p}.pdf"
-		#echo "convert $filereadjpg"
-    		p=$((p + 1))
-		done
-		# Init OCR and create hashes for all file
+                # Init OCR and create hashes for all file
                 find "$DIRECTORYORG" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
                 echo "File Original $(md5sum $filereada)" >> /tmp/hashfile.txt
                 namebase=$(basename $filereada .pdf)
-                ocrmypdf -l spa --force-ocr --output-type pdfa --optimize 3 --deskew --rotate-pages --jobs 4 --tesseract-timeout=300 $filereada $DIRECTORY/$namebase.pdf
+                #ocrmypdf -l spa --skip-text --output-type pdfa --optimize 0 --deskew --rotate-pages --jobs 4 --tesseract-timeout=300 $filereada $DIRECTORY/$namebase.pdf
+                ocrmypdf -l spa --redo-ocr --output-type pdfa --optimize 0 --rotate-pages --jobs 0 --tesseract-timeout=300 $filereada $DIRECTORY/$namebase.pdf
+
+                if [ $? -eq 0 ];then
+                        echo "OCR complet for $filereada"
+                else
+                        echo "OCR error for $filereada"
+                        mv $filereada $DIRECTORYSKIP
+                        #exit 1
+                fi
         done
         fi
 fi
 
 #Process substitution no subshell
-
 while IFS= read -r fileread; do
         i=$((i+1))
         printf -v newname "%04d.pdf" "$i"
@@ -83,10 +85,7 @@ done < <(find "$DIRECTORY" -maxdepth 1 -type f -name "*.pdf" -newer marcador.tmp
 echo "Rename succefully. $(printf "%d" "$i")"
 
 find "$DIRECTORY" -type f -name "*.pdf" -newer marcador.tmp -exec ls -tr {} + | while read filereada; do
-	echo "→ File rename "$DIRECTORY"/$(basename "$filereada") $(date)" >> /tmp/hashfile2.txt
+        echo "→ File rename "$DIRECTORY"/$(basename "$filereada") $(date)" >> /tmp/hashfile2.txt
 done
 
-paste /tmp/hashfile.txt /tmp/hashfile2.txt > original/hashes.txt
-
-
-
+paste /tmp/hashfile.txt /tmp/hashfile2.txt > unify/hashes.txt
