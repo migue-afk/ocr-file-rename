@@ -23,7 +23,7 @@ To separate document groups, add a page with a **QR code** between each group du
 
 Example output:
 
-![example](pdf222.png)
+![example](screenshots/pdf222.png)
 
 The result is a PDF with 6 pages, stored in:
 
