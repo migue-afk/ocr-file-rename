@@ -1,66 +1,134 @@
-This repository can be used to perform OCR recognition and rename documents based on content, for example, name_date.pdf, and it also determines the hash values of each file to ensure its integrity. 
-This tool is intended for use on Linux systems only.
+ ### Project Overview
+
+This repository is designed to work with scanners that have an Automatic Document Feeder (ADF), such as the **Brother ADS-1300**.
+
+When scanning documents in bulk, the scanner produces a single PDF containing all scanned pages. While PDF splitters can be used to separate documents, the process becomes more complex when multiple documents belong to the same group.
+
+To solve this problem, **QR codes** are used as separators between document groups. This repository helps automate the process of splitting, OCR processing, and organizing scanned documents, streamlining the workflow.
+
+---
+### Workflow Overview
+
+1. Scan documents in bulk using an ADF scanner
+2. Insert a QR code page between document groups
+3. Process the PDF automatically
+4. Receive separated, OCR-processed, and renamed documents
 
 
+## Step 1. Scan a Batch of Documents
 
-### Step 1. Create Python Virtual Environment
+Scan a batch of documents using the ADS-1300. The scanner will generate a single PDF containing all pages.
 
-Create virtual environment, access and install requirements
-```bash
-$ python3 -m venv .env
-$ source .env/bin/activate
-(.env) $ pip install -r requirements.txt
-(.env) $ python -m spacy download en_core_web_sm
+To separate document groups, add a page with a **QR code** between each group during scanning.
+
+Example output:
+
+![example](pdf222.png)
+
+The result is a PDF with 6 pages, stored in:
+
+```
+/report/archivo/batch.....
 ```
 
-### Step 2. Scan file OCR and order
-Place the scanned file into ./original directory, run ./renamefile-OCR.sh to perform OCR recognition, the script sequence will rename the original file from examplescanpdf.pdf to 0001.pdf, 000x.pdf, the new filewill be saved in ./archive.
-### Step 3. Rename file
-- Execute "python renamefile.py" for extract type and date for rename the file type_date.pdf.
-- Execute "python renamefile_spacy.py" for extract type, name and date for rename the file type_name_date.pdf.
-- Execute "python renamefile_ollama.py" for extarct type, name and date for rename the file type_name_date.pdf, using llama3.1:8b.
+---
+
+## Step 2. Create Python Virtual Environment
+
+Create and activate a virtual environment, then install the required dependencies:
+
+```bash
+python3 -m venv .env
+source .env/bin/activate
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
+
+---
+
+## Step 3. OCR Processing and File Renaming
+
+Enable execution permissions for the scripts:
+
+```bash
+chmod +x calhash.sh
+chmod +x renamefile-OCR.sh
+chmod +x sep.sh
+chmod +x renamefile_spacy.py
+```
+
+Create the required directories:
+
+```bash
+mkdir -p unify archive pdftopng pdfseparate report/archivo/skip report/consume .original/
+```
+
+Run the main process:
+
+```bash
+./sep.sh
+```
+
+You may see warnings like the following. These are normal when starting the process:
+
+```bash
+Clean Separate and PNG directory
+rm: cannot remove './pdfseparate/*': No such file or directory
+rm: cannot remove './pdftopng/*': No such file or directory
+Setting up watches.
+Watches established.
+```
+
+### Output Behavior
+
+* All processed pages are saved in `/report/archivo/batch......`
+* The original PDF is saved in `.original`
+* If a duplicate file is detected, it is saved in `.original/duplicate` and processing for that file stops
+
+---
 
 ## Dockerfile
 
-In directory execute `docker build`
+Build the Docker image from the project directory:
 
 ```bash
-docker build -t ocr_rename .
+docker build -t ocrdoc .
 ```
 
-After installation, `run` Docker to perform OCR recognition and set the identifier in the `archive` directory. If the `archive` directory does not exist, create it.
+Create and run a container:
 
 ```bash
-docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile-OCR.sh
+docker run -d \
+  --name ocrapp9 \
+  -v "$(pwd)/report/consume":/ocrapp/report/consume \
+  -v "$(pwd)/report/archivo":/ocrapp/report/archivo \
+  ocrdoc
 ```
 
-Now we can execute other scripts for rename
+View container logs with:
 
 ```bash
-docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile.py
+docker logs 9b38f......
 ```
 
-```bash
-docker run --rm -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile_spacy.py
+You can create multiple containers (e.g. `ocrapp9`, `ocrapp10`, etc.) to process files for different users independently.
+
+To process new documents, simply add files to:
+
+```
+/report/consume
 ```
 
-```bash
-docker run --rm --network=host -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename renamefile_ollama.py
+The container will continue running and waiting for new documents.
+
+---
+
+```text
+ _      __     _ __    ____ __
+| | /| / /__ _(_) /_  / _(_) /__ ___
+| |/ |/ / _ `/ / __/ / _/ / / -_|_-<
+|__/|__/\_,_/_/\__/ /_//_/_/\__/___/
 ```
 
-For Docker Dessktop `network=host` does not work, use `ollama_host = "http://host.docker.internal:11434` in **renamefile_ollama.py**
-
-
-Don't forget to install ollama and the llama3.1:8b model or another as a client on your host or remote client, in that case define the IP in ollama_host
-
-**Run the container in the background with a shell**
-```bash
-docker run -dit --name ocr_rename_con -v "$(pwd)/original":/ocrapp/original -v "$(pwd)/archive":/ocrapp/archive ocr_rename /bin/bash
-```
-
-**Enter the container**
-```bash
-docker exec -it ocr_rename_con /bin/bash
-```
-
+---
 
