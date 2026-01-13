@@ -27,7 +27,14 @@ WORKDIR /ocrapp
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p unify archive pdftopng pdfseparate report/archivo/skip report/consume .original/
+RUN mkdir -p \
+    unify \
+    archive \
+    pdftopng \
+    pdfseparate \
+    report/archivo/skip \
+    report/consume \
+    .original
 
 # Give execution permissions (if needed)
 RUN chmod +x entrypoint.sh calhash.sh renamefile-OCR.sh renamefile_spacy.py sep.sh
