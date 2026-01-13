@@ -1,4 +1,4 @@
- ### Project Overview
+### Project Overview
 
 This repository is designed to work with scanners that have an Automatic Document Feeder (ADF), such as the **Brother ADS-1300**.
 
@@ -108,7 +108,7 @@ docker run -d \
 View container logs with:
 
 ```bash
-docker logs 9b38f......
+docker logs -f 9b38f......
 ```
 
 You can create multiple containers (e.g. `ocrapp9`, `ocrapp10`, etc.) to process files for different users independently.
